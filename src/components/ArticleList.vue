@@ -42,11 +42,9 @@
 </script>
 
 <style scoped>
-	body.sidebar-right #main{
-		float: left;
-	}
 	#main{
 		width: 620px;
+		float: left;
 	}
 	article{
 		position: relative;

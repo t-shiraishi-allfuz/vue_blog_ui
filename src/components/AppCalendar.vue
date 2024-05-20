@@ -34,3 +34,9 @@
 		}
 	};
 </script>
+
+<style scoped>
+	.fc .fc-daygrid-day-frame{
+		overflow: hidden;
+	}
+</style>

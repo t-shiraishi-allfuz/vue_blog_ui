@@ -1,15 +1,17 @@
 <template>
-	<aside class="app-sidebar">
-		<div class="calendar">
+	<aside id="sidebar">
+		<div class="sidewrapper">
 			<AppCalendar />
 		</div>
-		<div class="categories">
-			<label for="category">カテゴリー</label>
-			<select id="category" name="category">
-				<option value="all">全て</option>
-				<option value="category1">カテゴリー1</option>
-				<option value="category2">カテゴリー2</option>
-			</select>
+		<div class="sidewrapper">
+			<div class="sidetitle">カテゴリー</div>
+			<div class="side">
+				<select id="category" name="category">
+					<option value="all">全て</option>
+					<option value="category1">カテゴリー1</option>
+					<option value="category2">カテゴリー2</option>
+				</select>
+			</div>
 		</div>
 	</aside>
 </template>
@@ -21,29 +23,35 @@
 		name: 'AppSidebar',
 		components: {
 			AppCalendar
-		}
+		},
 	};
 </script>
 
 <style scoped>
-	.app-sidebar {
-		flex: 0 0 200px;
-		margin: 10px;
+	#sidebar{
+		width: 240px;
+		float: right;
 	}
+	.sidewrapper{
+		position: relative;
+		padding: 20px 0;
+		font-size: 13px;
+		overflow: hidden;
 
-	.calendar {
-		min-width: 350px;
-		margin-bottom: 20px;
-	}
-
-	.categories {
-		margin-bottom: 20px;
-	}
-
-	@media (max-width: 768px) {
-		.app-sidebar {
-			flex: 1;
-			margin: 0;
+		.sidetitle{
+			border-bottom: 2px solid #ccc;
+			color: #ccc;
+			font-size: 14px;
+			font-weight: bold;
+			line-height: 1.2;
+			margin-bottom: 16px;
+			padding: 6px 0;
+		}
+		.side{
+			text-align: center;
+		}
+		li{
+			list-style: none;
 		}
 	}
 </style>
