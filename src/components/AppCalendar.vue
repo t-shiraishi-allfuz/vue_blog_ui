@@ -16,27 +16,45 @@
 				calendarOptions: {
 					plugins: [dayGridPlugin, interactionPlugin],
 					initialView: 'dayGridMonth',
-					dateClick: this.handleDateClick,
 					locale: 'ja',
+					dayCellContent: function(arg){
+						return arg.date.getDate();
+					},
+					headerToolbar: {
+						start: "prev",
+						center: "title",
+						end: "next"
+					},
+					buttonText: {
+						today: '今日',
+						month: '月'
+					},
+					buttonHints: {
+						prev: '前の$0',
+						next: '次の$0',
+					},
 					events: [
 						{
+							id: '1',
 							title: 'Meeting',
-							start: new Date()
-						}
+							start: new Date(),
+						},
+						{
+							id: '2',
+							title: 'Meeting',
+							start: '2024-05-11',
+							end: '2024-05-12'
+						},
 					],
+					eventClick: function(info) {
+						info.jsEvent.preventDefault();
+
+						if (info.event.id) {
+							window.location.href = '/articles/'+ info.event.id;
+						}
+					},
 				}
 			}
 		},
-		methods: {
-			handleDateClick: function(arg) {
-				alert('予定を入れて下さい ' + arg.dateStr)
-			},
-		}
 	};
 </script>
-
-<style scoped>
-	.fc .fc-daygrid-day-frame{
-		overflow: hidden;
-	}
-</style>
