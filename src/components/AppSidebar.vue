@@ -1,7 +1,7 @@
 <template>
 	<aside class="app-sidebar">
 		<div class="calendar">
-			<p>Calendar Component Here</p>
+			<AppCalendar />
 		</div>
 		<div class="categories">
 			<label for="category">カテゴリー</label>
@@ -15,8 +15,13 @@
 </template>
 
 <script>
+	import AppCalendar from './AppCalendar.vue';
+
 	export default {
 		name: 'AppSidebar',
+		components: {
+			AppCalendar
+		}
 	};
 </script>
 
@@ -26,7 +31,11 @@
 		margin: 10px;
 	}
 
-	.calendar,
+	.calendar {
+		min-width: 350px;
+		margin-bottom: 20px;
+	}
+
 	.categories {
 		margin-bottom: 20px;
 	}
