@@ -1,12 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
-import ArticleList from '../components/ArticleList.vue';
-import ArticleDetail from '../components/ArticleDetail.vue';
+import ArticleDetailView from '../views/ArticleDetailView.vue';
 
 const routes = [
 	{ path: '/', component: HomeView },
-	{ path: '/articles', component: ArticleList },
-	{ path: '/articles/:id', component: ArticleDetail },
+	{ path: '/articles/:id', component: ArticleDetailView },
 ];
 
 const router = createRouter({

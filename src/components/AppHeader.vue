@@ -1,6 +1,10 @@
 <template>
 	<aside class="app-header">
-		<div id="blog-title">{{ blog.title }}</div>
+		<div id="blog-title">
+			<router-link :to="'/'">
+				{{ blog.title }}
+			</router-link>
+		</div>
 		<p id="blog-description">{{ blog.description }}</p>
 		<img src="@/assets/header.png" alt="AppHeader" class="header-img" />
 	</aside>
@@ -28,6 +32,11 @@
 			font-weight: bold;
 			line-height: 1.4;
 			margin: 30px 0;
+
+			a{
+				color: #fff;
+				text-decoration: none;
+			}
 		}
 		#blog-description{
 			color: #979797;

@@ -2,7 +2,7 @@
 	<div class="container">
 		<AppHeader />
 		<main class="content">
-			<ArticleList />
+			<ArticleDetail />
 			<AppSidebar />
 		</main>
 	</div>
@@ -10,23 +10,15 @@
 
 <script>
 	import AppHeader from '../components/AppHeader.vue';
-	import ArticleList from '../components/ArticleList.vue';
+	import ArticleDetail from '../components/ArticleDetail.vue';
 	import AppSidebar from '../components/AppSidebar.vue';
 
 	export default {
 		name: "HomeView",
 		components: {
 			AppHeader,
-			ArticleList,
+			ArticleDetail,
 			AppSidebar
-		},
-		mounted() {
-			window.testApi = this.testApi;
-		},
-		methods: {
-			testApi() {
-				console.log("Flutterからのお呼び出し");
-			}
 		},
 	};
 </script>
