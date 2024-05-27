@@ -22,53 +22,50 @@
 				<div id="article-options">
 					<section id="comments">
 						<h1 class="article-option-title">コメント</h1>
-						<div class="article-option" v-for="comment in comments" :key="comment.id">
-							<ol id="ld_blog_article_comment_entries">
-								<li class="comment-set v2 odd">
-									<ul class="comment-info">
-										<li class="comment-author">{{ comment.name }}</li>
-										<li class="comment-date">{{ comment.date }}</li>
-										<li class="comment-rating"></li>
-										<li class="comment-body">{{ comment.comment }}</li>
-										<li class="comment-reaction">
-											<div class="comment-reply">
-												<img class="icon-reply" :src="iconReply">
-											</div>
-											<div class="comment-like">
-												<img class="icon-like" :src="iconLike">
-											</div>
-											<div class="comment-like-count-2">
-												<span class="count-like">{{ comment.like }}</span>
-											</div>
+						<ol id="ld_blog_article_comment_entries">
+							<div class="comment" v-for="comment in comments" :key="comment.id">
+								<li class="comment-set-v2 odd">
+									<CommentInfo :comment="comment" />
+								</li>
+								<li>
+									<ul class="comment-reply-list" v-if="comment.reply.length">
+										<li class="comment-set-v2 even reply" v-for="reply in comment.reply" :key="reply.id">
+											<CommentInfo :comment="reply" />
 										</li>
 									</ul>
 								</li>
-								<template v-if="comment.reply.length">
-									<li v-for="reply in comment.reply" :key="reply.id">
-										<ul class="comment-reply-list">
-											<li class="comment-set v2 even reply">
-												<ul class="comment-info">
-													<li class="comment-author">{{ reply.name }}</li>
-													<li class="comment-date">{{ reply.date }}</li>
-													<li class="comment-rating"></li>
-													<li class="comment-body">{{ reply.comment }}</li>
-													<li class="comment-reaction">
-														<div class="comment-reply">
-															<img class="icon-reply" :src="iconReply">
-														</div>
-														<div class="comment-like">
-															<img class="icon-like" :src="iconLike">
-														</div>
-														<div class="comment-like-count-2">
-															<span class="count-like">{{ reply.like }}</span>
-														</div>
-													</li>
-												</ul>
-											</li>
-										</ul>
-									</li>
-								</template>
-							</ol>
+							</div>
+						</ol>
+						<div id="comment-form-outer">
+							<div class="article-option comment-form-v2">
+								<form @submit.prevent="submitComment">
+									<fieldset>
+										<dl class="comment-form-author">
+											<dt>
+												<label for="comment-form-author" class="comment-author-label">名前</label>
+											</dt>
+											<dd id="comment-author-form">
+												<input type="text" class="text comment-form-v2-author" id="comment-form-author" name="author" placeholder="名前" v-model="newComment.author">
+											</dd>
+										</dl>
+										<dl class="comment-form-body">
+											<dt>
+												<label for="comment-form-textarea" class="comment-body-label">コメント</label>
+											</dt>
+											<dd>
+												<textarea id="comment-form-textarea" class="comment-form-v2-body" name="body" v-model="newComment.body"></textarea>
+												<div id="comment-form-tools" class="comment-form-tools">
+													<div class="comment-form-sumibit">
+														<span class="submit">
+															<button type="submit" >投稿する</button>
+														</span>
+													</div>
+												</div>
+											</dd>
+										</dl>
+									</fieldset>
+								</form>
+							</div>
 						</div>
 					</section>
 				</div>
@@ -78,26 +75,44 @@
 </template>
 
 <script>
-	import ImageReply from "@/assets/icon_reply.png";
-	import ImageLike from "@/assets/icon_like.png";
-	import ImageLikeOn from "@/assets/icon_like_on.png";
+	import CommentInfo from "./CommentInfo.vue";
 
-	let article = { id: 1, title: "記事1", content: "これは記事1です", like: 46, date: "2024年5月20日 00:00" };
+	let article = { id: 1, title: "記事1", content: "これは記事1です", like: 46, date: "2024/5/20 00:00" };
 	let comments = [
-		{id: 1, comment: "コメントです。", name: "ニックネーム", like: 0, date: "2024年5月20日 10:00", reply: [
-			{id: 1, comment: "返信です。", name: "ニックネーム", like: 0, date: "2024年5月20日 12:00"}
+		{id: 1, comment: "コメントです。", name: "ニックネーム", like: 0, date: "2024/5/20 10:00", reply: [
+			{id: 1, comment: "返信です。", name: "ニックネーム", like: 0, date: "2024/5/20 12:00"}
 		]}
 	];
 
 	export default {
 		name: "ArticleDetail",
+		components: {
+			CommentInfo
+		},
 		data() {
 			return {
 				article: article,
 				comments: comments,
-				iconReply: ImageReply,
-				iconLike: ImageLike,
-				iconLikeOn: ImageLikeOn
+				newComment: {
+					author: '',
+					body: ''
+				}
+			}
+		},
+		methods: {
+			submitComment() {
+				if (this.newComment.author && this.newComment.body) {
+					this.comments.push({
+						id: this.comments.length + 1,
+						comment: this.newComment.body,
+						name: this.newComment.author,
+						date: new Date().toLocaleString(),
+						like: 0,
+						reply: [],
+					})
+					this.newComment.author = '';
+					this.newComment.body = '';
+				}
 			}
 		}
 	};
@@ -173,7 +188,7 @@
 			font-size: 16px;
 			letter-spacing: 1px;
 		}
-		div.article-option ol{
+		ol{
 			list-style: none;
 			margin: 0;
 			padding: 0;
@@ -181,16 +196,17 @@
 		li{
 			list-style: none;
 		}
-		.comment-set.v2:first-child{
+		.comment:first-child{
 			border-top: none;
 		}
-		.comment-set.v2:last-child{
+		.comment:last-child{
 			.comment-info{
 				padding-bottom: 12px;
 				border-bottom: none;
 			}
 		}
-		.comment-set.v2{
+		.comment-set-v2{
+			border-top: 1px solid #F3F3F3;
 			border-bottom: 1px solid #F3F3F3;
 			padding: 0 32px;
 
@@ -199,83 +215,113 @@
 				margin: 0;
 				padding: 24px 0;
 				font-size: 12px;
+				list-style: none;
 
-				.comment-author{
-					font-weight: bold;
-					padding-right: 8px;
-					display: inline-block;
-					max-width: calc(100% - 10em);
-				}
-				.comment-date{
-					position: absolute;
-					display: inline-block;
-					right: 0;
-					border: none;
-				}
-				.comment-rating{
-					padding: 8px 0;
-				}
-				.comment-body{
-					margin-left: 16px;
-					padding: 8px 0;
-					color: #c7c7c7;
-					line-height: 1.5;
-				}
-				.comment-reaction{
-					margin-top: 10px;
-					text-align: right;
-					vertical-align: middle;
-					display: list-item;
-
-					.comment-reply{
-						display: inline-block;
-						margin-right: 16px;
-						font-size: 16px;
-						vertical-align: middle;
-						cursor: pointer;
-
-						img{
-							width: 30%;
-						}
-					}
-					.comment-like{
-						position: relative;
-						display: inline-block;
-						margin-right: 4px;
-						vertical-align: middle;
-						cursor: pointer;
-
-						img{
-							width: 30%;
-						}
-					}
-					.comment-like-count-2{
-						display: inline-block;
-						vertical-align: middle;
-						color: #ff8fb0;
-					}
+				li{
+					list-style: none;
 				}
 			}
+		}
+	}
+	.comment-reply-list{
+		margin: 12px 0 12px 32px;
+		border-left: solid 1px #ccc;
+		padding: 0;
 
-			.reply{
+		.comment-set-v2{
+			border: none !important;
+			padding-left: 32px !important;
+		}
+	}
+	#comment-form-outer{
+		font-size: 12px;
+		margin: 2em 0 4em;
+
+		fieldset{
+			border: 0;
+		}
+
+		dl{
+			overflow: hidden;
+		}
+
+		dt{
+			width: 10%;
+			color: #777;
+			float: left;
+			text-align: right;
+			line-height: 30px;
+		}
+
+		.comment-form-v2 {
+			dl{
+				padding: 0;
+				margin: 12px 10%;
+			}
+			dd{
+				margin: 0;
+			}
+			.comment-author-label{
+				display: none;
+			}
+
+			input.text.comment-form-v2-author{
+				width: 100%;
+				height: 50%;
+				border: 1px solid #ddd;
+				border-radius: 3px;
+				padding: 1em;
+				box-sizing: border-box;
+			}
+			.comment-form-body{
+				position: relative;
+				overflow: visible;
+			}
+			.comment-body-label{
+				display: none;
+			}
+			textarea.comment-form-v2-body{
+				width: 100%;
+				height: 171px;
+				border: 1px solid #ddd;
+				border-radius: 3px;
+				margin-bottom: 12px;
+				padding: 1em 2em 1em 1em;
+				box-sizing: border-box;
+			}
+			.comment-form-tools{
+				background: none;
 				border: none;
-				padding-left: 32px;
+				height: auto;
+				border-radius: 0 0 3px 3px;
+				font-size: 12px;
+
+				.comment-form-sumibit{
+					margin-top: 12px;
+					width: 100%;
+					box-sizing: border-box;
+
+					.submit{
+						margin: 2px;
+						float: none;
+
+						button{
+							width: 100%;
+							height: 60px;
+							box-sizing: border-box;
+							background: #38C638;
+							text-shadow: none;
+							color: #fff;
+							font-size: 15px;
+							border: none;
+							line-height: 1;
+						}
+					}
+				}
 			}
 		}
-		.comment-reply-list{
-			margin: 12px 0 12px 32px;
-			border-left: solid 1px #ccc;
-			padding: 0;
-		}
-		.icon-comment-v2{
-			font-family: 'icon-comment-v2' !important;
-			speak: none;
-			font-style: normal;
-			font-weight: normal;
-			font-variant: normal;
-			text-transform: none;
-			line-height: 1;
-			-webkit-font-smoothing: antialiased;
+		#comment-author-form{
+			line-height: 30px;
 		}
 	}
 </style>
